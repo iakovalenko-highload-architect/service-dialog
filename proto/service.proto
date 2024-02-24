@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "../internal/generated/";
+
+service ServiceDialog {
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc Get(GetRequest) returns (GetResponse) {}
+}
+
+message Message {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string text = 3;
+}
+
+message CreateRequest {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string text = 3;
+}
+
+message CreateResponse {
+  Message message = 1;
+}
+
+message GetRequest {
+  string fromUserID = 1;
+  string toUserID = 2;
+}
+
+message GetResponse {
+  repeated Message messages = 1;
+}

@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db-dialog:
+    image: postgres:15.1
+    container_name: db-dialog
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=master
+    volumes:
+      - ./db/master/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - service-dialog-network
+    ports:
+      - "5435:5432"
+networks:
+  service-dialog-network:
