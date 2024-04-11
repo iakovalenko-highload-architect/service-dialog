@@ -1,7 +1,9 @@
 package models
 
 type Message struct {
-	FromID string
-	ToID   string
-	Text   string
+	ID       string
+	DialogID string
+	FromID   string
+	ToID     string
+	Text     string
 }

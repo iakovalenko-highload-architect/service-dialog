@@ -7,7 +7,8 @@ import (
 )
 
 type Message struct {
-	ID        int64     `db:"id"`
+	ID        string    `db:"id"`
+	DialogID  string    `db:"dialog_id"`
 	FromID    string    `db:"from_id"`
 	ToID      string    `db:"to_id"`
 	Text      string    `db:"text_"`
@@ -17,16 +18,20 @@ type Message struct {
 
 func Exported(internal Message) models.Message {
 	return models.Message{
-		FromID: internal.FromID,
-		ToID:   internal.ToID,
-		Text:   internal.Text,
+		ID:       internal.ID,
+		DialogID: internal.DialogID,
+		FromID:   internal.FromID,
+		ToID:     internal.ToID,
+		Text:     internal.Text,
 	}
 }
 
 func Imported(external models.Message) Message {
 	return Message{
-		FromID: external.FromID,
-		ToID:   external.ToID,
-		Text:   external.Text,
+		ID:       external.ID,
+		DialogID: external.DialogID,
+		FromID:   external.FromID,
+		ToID:     external.ToID,
+		Text:     external.Text,
 	}
 }

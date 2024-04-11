@@ -13,9 +13,9 @@ import (
 
 func (p *Postgres) Insert(ctx context.Context, message models.Message) (*models.Message, error) {
 	query := `
-		insert into messages (from_id, to_id, text_)
-		values(:from_id, :to_id, :text_)
-		returning id, from_id, to_id, text_
+		insert into messages (dialog_id, from_id, to_id, text_)
+		values(:dialog_id, :from_id, :to_id, :text_)
+		returning id, dialog_id, from_id, to_id, text_
 	`
 
 	rows, err := p.conn.NamedQueryContext(ctx, query, dto.Imported(message))
@@ -33,15 +33,15 @@ func (p *Postgres) Insert(ctx context.Context, message models.Message) (*models.
 	return pointer.To(dto.Exported(inserted)), nil
 }
 
-func (p *Postgres) FinByUserIDs(ctx context.Context, fromID string, toID string) ([]models.Message, error) {
+func (p *Postgres) FinMessagesByDialogID(ctx context.Context, dialogID string) ([]models.Message, error) {
 	query := `
-		select from_id, to_id, text_
+		select id, from_id, to_id, text_
 		from messages
-		where (from_id = $1 and to_id = $2) or (from_id = $2 and to_id = $1)
-		order by id
+		where dialog_id = $1
+		order by created_at
 	`
 
-	query, args, err := sqlx.In(query, fromID, toID)
+	query, args, err := sqlx.In(query, dialogID)
 	if err != nil {
 		return nil, errors.Wrap(err, "create message select error")
 	}
