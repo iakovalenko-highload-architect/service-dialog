@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -10,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	"service-dialog/cmd"
+	"service-dialog/internal/cache"
 	dto "service-dialog/internal/generated"
 	"service-dialog/internal/rpc/handlers/create"
 	"service-dialog/internal/rpc/handlers/get"
@@ -19,7 +21,12 @@ import (
 )
 
 func main() {
-	messageManager := message_manager.New(storage.New(cmd.MustInitPostgresql()))
+	ctx := context.Background()
+
+	storage := storage.New(cmd.MustInitPostgresql())
+	dialogsCache := cache.Must(ctx, storage)
+
+	messageManager := message_manager.New(storage, dialogsCache)
 
 	createHandler := create.New(messageManager)
 	getHandler := get.New(messageManager)
