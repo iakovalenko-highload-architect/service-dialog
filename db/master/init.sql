@@ -16,5 +16,5 @@ CREATE TABLE messages (
    FOREIGN KEY (dialog_id) REFERENCES dialogs(id)
 );
 
-SELECT create_distributed_table('dialogs', 'id');
-SELECT create_distributed_table('messages', 'dialog_id', colocate_with => 'dialogs');
+-- SELECT create_distributed_table('dialogs', 'id');
+-- SELECT create_distributed_table('messages', 'dialog_id', colocate_with => 'dialogs');
